@@ -61,6 +61,6 @@ public class MainController {
         usuario.setEstado(view.getEstado());
 
         usuarioDAO.insertar(usuario);
-        cargarUsuarios(); // Vuelve a cargar la tabla para ver el usuario recien agregado
+        cargarUsuarios();
     }
 }
