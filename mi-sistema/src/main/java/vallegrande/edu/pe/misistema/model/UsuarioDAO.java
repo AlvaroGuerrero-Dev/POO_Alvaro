@@ -11,7 +11,7 @@ public class UsuarioDAO {
 
     public List<Usuario> listar() {
         List<Usuario> lista = new ArrayList<>();
-        String sql = "SELECT id, nombre, apellido, correo, estado FROM usuarios";
+        String sql = "SELECT * FROM usuarios";
 
         try (Connection conn = Conexion.conectar();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -31,4 +31,27 @@ public class UsuarioDAO {
         }
         return lista;
     }
+
+    public void insertar(Usuario usuario) {
+        String sql = """
+                INSERT INTO usuarios
+                (nombre, apellido, correo, estado)
+                VALUES (?, ?, ?, ?)
+                """;
+
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, usuario.getNombre());
+            stmt.setString(2, usuario.getApellido());
+            stmt.setString(3, usuario.getCorreo());
+            stmt.setString(4, usuario.getEstado());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
