@@ -46,6 +46,14 @@ public class MainController {
             view.mostrarDashboard();
         });
 
+        view.getTablaUsuarios().getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                view.cargarUsuarioEnFormulario(newVal);
+            }
+        });
+
+        view.getBtnActualizar().setOnAction(e -> actualizarUsuario());
+        view.getBtnEliminar().setOnAction(e -> eliminarUsuario());
     }
 
     private void cargarUsuarios() {
@@ -62,5 +70,30 @@ public class MainController {
 
         usuarioDAO.insertar(usuario);
         cargarUsuarios();
+    }
+
+    private void actualizarUsuario() {
+        int id = view.getIdSeleccionado();
+        if (id == 0) return;
+
+        Usuario u = new Usuario();
+        u.setId(id);
+        u.setNombre(view.getNombre().trim());
+        u.setApellido(view.getApellido().trim());
+        u.setCorreo(view.getCorreo().trim());
+        u.setEstado(view.getEstado());
+
+        usuarioDAO.actualizar(u);
+        cargarUsuarios();
+        view.limpiarFormulario();
+    }
+
+    private void eliminarUsuario() {
+        int id = view.getIdSeleccionado();
+        if (id == 0) return;
+
+        usuarioDAO.eliminar(id);
+        cargarUsuarios();
+        view.limpiarFormulario();
     }
 }

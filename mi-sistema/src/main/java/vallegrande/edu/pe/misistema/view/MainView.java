@@ -26,6 +26,9 @@ public class MainView extends BorderPane {
     private Button btnRegistrar;
     private Label lblMensaje;
     private TableView<Usuario> tablaUsuarios;
+    private int idSeleccionado = 0;
+    private Button btnActualizar;
+    private Button btnEliminar;
 
     public MainView() {
         inicializarComponentesUsuarios();
@@ -98,6 +101,30 @@ public class MainView extends BorderPane {
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
         tablaUsuarios.getColumns().addAll(colId, colNombre, colApellido, colCorreo, colEstado);
+
+        // --- Botón Actualizar ---
+        btnActualizar = new Button("✏️ Actualizar");
+        btnActualizar.setPrefHeight(40);
+        btnActualizar.setStyle(
+                "-fx-background-color: #3B82F6;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-cursor: hand;"
+        );
+
+        // --- Botón Eliminar ---
+        btnEliminar = new Button("🗑️ Eliminar");
+        btnEliminar.setPrefHeight(40);
+        btnEliminar.setStyle(
+                "-fx-background-color: #EF4444;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-background-radius: 8;" +
+                        "-fx-cursor: hand;"
+        );
     }
 
     private TextField crearTextField(String placeholder) {
@@ -253,7 +280,8 @@ public class MainView extends BorderPane {
         grid.add(crearEtiquetaCampo("Estado:"), 3, 0);
         grid.add(cbEstado, 3, 1);
 
-        grid.add(btnRegistrar, 4, 1);
+        HBox cajaBotones = new HBox(8, btnRegistrar, btnActualizar, btnEliminar);
+        grid.add(cajaBotones, 4, 1);
 
         tarjetaForm.getChildren().addAll(lblSeccion, grid, lblMensaje);
 
@@ -412,6 +440,33 @@ public class MainView extends BorderPane {
         if (tablaUsuarios != null) {
             tablaUsuarios.getItems().clear();
             tablaUsuarios.getItems().addAll(usuarios);
+        }
+    }
+
+    // Agrega estos métodos en MainView.java:
+    public int getIdSeleccionado() { return idSeleccionado; }
+    public Button getBtnActualizar() { return btnActualizar; }
+    public Button getBtnEliminar() { return btnEliminar; }
+    public TableView<Usuario> getTablaUsuarios() { return tablaUsuarios; }
+
+    public void cargarUsuarioEnFormulario(Usuario u) {
+        if (u != null) {
+            this.idSeleccionado = u.getId();
+            txtNombre.setText(u.getNombre());
+            txtApellido.setText(u.getApellido());
+            txtCorreo.setText(u.getCorreo());
+            cbEstado.setValue(u.getEstado());
+        }
+    }
+
+    public void limpiarFormulario() {
+        this.idSeleccionado = 0;
+        txtNombre.clear();
+        txtApellido.clear();
+        txtCorreo.clear();
+        cbEstado.setValue("ACTIVO");
+        if (tablaUsuarios != null) {
+            tablaUsuarios.getSelectionModel().clearSelection();
         }
     }
 }
